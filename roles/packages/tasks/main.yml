@@ -1,0 +1,18 @@
+---
+# tasks file for packages
+- name: Install a list of packages
+  yum:
+    name: "{{ packages }}"
+  vars:
+    packages:
+    - epel-release
+    - centos-release-scl
+    - parted
+    - net-tools
+    - lssci
+    - nmap
+    - wget
+    - htop
+    - curl
+    - open-vm-tools
+    - git

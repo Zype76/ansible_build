@@ -1,0 +1,13 @@
+---
+# tasks file for configs
+#
+- name: Put SELinux in permissive mode, logging actions that would be blocked.
+  selinux:
+    policy: targeted
+    state: permissive
+
+- name: add port 2255
+lineinfile: dest="/etc/ssh/sshd_config" regexp="^Port 22" line="Port {{ sshdport }}" insertafter="^# What " state=present
+
+– name: set PermitRootLogin to no
+lineinfile: dest="/etc/ssh/sshd_config" insertafter="^#PermitRootLogin without-password" line="PermitRootLogin no" state=present
