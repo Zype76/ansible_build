@@ -1,35 +1,40 @@
 ---
 # tasks file for configs
 #
+- name: Add hostname to new server
+  hostname:
+    name: "{{ SERVER_HOSTNAME }}"
+
 - name: Put SELinux in permissive mode, logging actions that would be blocked.
   selinux:
     policy: targeted
     state: permissive
 
 - name: Add desired ssh port to config
-lineinfile: dest="/etc/ssh/sshd_config" regexp="^Port 22" line="Port {{ sshdport }}" insertafter="^# What " state=present
-notify:
-- restart sshd
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: "^Port 22"
+    line: "Port {{ sshdport }}"
+    insertafter: "^# What "
+    state: present
+  notify:
+    - restart sshd
 
-– name: set PermitRootLogin to no
-lineinfile: dest="/etc/ssh/sshd_config" insertafter="^#PermitRootLogin without-password" line="PermitRootLogin no" state=present
-- restart sshd
+- name: set PermitRootLogin to no
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    insertafter: "^#PermitRootLogin without-password"
+    line: "PermitRootLogin no"
+    state: present
+  notify:
+    - restart sshd
 
 - name: Add a maintenace account with full sudo 
   user:
-    name: {{ service_account }} 
+    name: "{{ service_account }}"
     shell: /bin/bash
     groups: wheel
     append: yes
-
-# NOTE: Fully quoted because of the ': ' on the line. See the Gotchas in the YAML docs.
-- name: Validate the sudoers file before saving
-  lineinfile:
-    path: /etc/sudoers
-    state: present
-    regexp='^%wheel'
-    line='%wheel ALL=(ALL) NOPASSWD: ALL'"
-    validate: /usr/sbin/visudo -cf %s
 
 - name: Create a symbolic link to remove consistent network device naming
   file:
@@ -37,8 +42,20 @@ lineinfile: dest="/etc/ssh/sshd_config" insertafter="^#PermitRootLogin without-p
     dest: /etc/udev/rules.d/80-net-name-slot.rules
     state: link
 
-handlers:
-  - name: restart sshd
-    service:
-      name: sshd
-      state: restarted	
+- name: Validate the sudoers file before saving
+  lineinfile:
+    path: /etc/sudoers
+    state: present
+    regexp: '^%wheel'
+    line: '%wheel ALL=(ALL) NOPASSWD: ALL' 
+    validate: /usr/sbin/visudo -cf /etc/sudoers 
+
+- name: Disable ipv6 on the host
+  lineinfile:
+    path: /etc/sysctl.conf
+    line: 'net.ipv6.conf.all.disable_ipv6 = 1'
+
+- name: Disable ipv6 on the host 2
+  lineinfile:
+    path: /etc/sysctl.conf
+    line: 'net.ipv6.conf.default.disable_ipv6 = 1'

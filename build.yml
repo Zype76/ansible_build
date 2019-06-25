@@ -1,8 +1,28 @@
 ---
 - hosts: all
   remote_user: root
-  become: yes
+  gather_facts: no
+  vars:
+    SERVER_HOSTNAME: ansibletest #Insert desired hostname for server
+    HOST_IP: 1 #Insert desired ip for host here
+    HOST_SUBNET: 1 #Insert subnet mask for host here
+    HOST_GATEWAY: 1 #Insert gateway for host here
+  vars_files:
+    - external_vars.yml
 
   roles:
-    - configs
     - packages
+    - configs
+
+  tasks:
+  - name: Restart server
+    command: /sbin/shutdown -r +1
+    async: 0
+    poll: 0
+    ignore_errors: true
+
+  handlers:
+    - name: restart sshd
+      service:
+        name: sshd
+        state: restarted
