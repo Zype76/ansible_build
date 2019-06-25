@@ -48,7 +48,7 @@
     state: present
     regexp: '^%wheel'
     line: '%wheel ALL=(ALL) NOPASSWD: ALL' 
-    validate: /usr/sbin/visudo -cf /etc/sudoers 
+    validate: /usr/sbin/visudo -cf %s 
 
 - name: Disable ipv6 on the host
   lineinfile:

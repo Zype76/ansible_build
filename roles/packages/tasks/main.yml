@@ -1,7 +1,7 @@
 ---
 # tasks file for packages
 #Installs list of desired packages on new host
-- name: Install epel and scl repos 
+- name: Install epel and scl repos prior to desired packages 
   yum:
     name:
       - epel-release
@@ -12,6 +12,7 @@
   yum:
     name: 
       - parted
+      - libselinux-python
       - net-tools
       - lsscsi
       - nmap
