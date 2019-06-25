@@ -16,3 +16,8 @@
     - curl
     - open-vm-tools
     - git
+
+- name: Ensures all packages are up to date
+  yum:
+    name: '*'
+    state: latest
