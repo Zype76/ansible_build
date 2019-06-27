@@ -5,10 +5,16 @@
   hostname:
     name: "{{ SERVER_HOSTNAME }}"
 
-- name: Put SELinux in permissive mode, logging actions that would be blocked.
+- name: Put SELinux in permissive mode first.
   selinux:
     policy: targeted
     state: permissive
+
+- name: Create a message of the day
+  file:
+    src: motd.txt
+    dest: /etc/motd
+    state: file
 
 - name: Add desired ssh port to config
   lineinfile:
@@ -36,6 +42,12 @@
     groups: wheel
     append: yes
 
+- name: Set authorized key for service account by copying it from current user
+  authorized_key:
+    user: "{{ service_account }}"
+    state: present
+    key: "{{ lookup('file', lookup('env','HOME') + '/.ssh/id_rsa.pub') }}"
+
 - name: Create a symbolic link to remove consistent network device naming
   file:
     src: /dev/null
@@ -59,3 +71,15 @@
   lineinfile:
     path: /etc/sysctl.conf
     line: 'net.ipv6.conf.default.disable_ipv6 = 1'
+
+- name: Genereate UUID for eth0
+  shell: /usr/bin/uuidgen
+  register: UUID_PRIMARY_INTERFACE
+
+- name: Genereate template for primary nic
+  template:
+    src: interface.j2
+    dest: /etc/sysconfig/network-scripts/ifcfg-eth0
+
+- name: Remove eno interface files
+  shell: /bin/rm -rf /etc/sysconfig/network-scripts/ifcfg-eno*

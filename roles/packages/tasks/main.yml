@@ -1,9 +1,16 @@
 ---
 # tasks file for packages
 #Installs list of desired packages on new host
-- name: Install epel and scl repos prior to desired packages 
+- name: Disable selinux via command to allow the use of copy
+  command: "/usr/sbin/setenforce 0"
+
+- name: 
+  dnsset: 
+
+- name: Install centos, epel and scl repos prior to desired packages 
   yum:
     name:
+      - centos-release
       - epel-release
       - centos-release-scl
     state: latest
