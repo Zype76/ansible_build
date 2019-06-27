@@ -1,7 +1,9 @@
 # ansible_build
 Ansible playbooks for building a linux vm.
-
 Wanted to make a polished playbook to showcase my Ansible competencies.
+
+EXAMPLE SYNTAX TO CALL THE PLAYBOOK: 
+ansible-playbook --ask-vault-pass -i hosts build.yml -k
 
 This setup requires an external vars file, and I recommend that you encrypt it with ansible vault.
 
