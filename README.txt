@@ -11,5 +11,9 @@ Steps for a vault file:
 To create the file: ansible-vault create external_vars.yml
 File content example: 
 # Secure variables
-sshdport: NUMBERHERE
-service_account: ACCOUNTNAMEHERE
+SSHDPORT:        #Insert ssh port number here
+SERVICE_ACCOUNT: #Insert account name here
+SERVER_HOSTNAME: #Insert desired hostname for server
+HOST_IP:         #Insert desired ip for host here
+HOST_SUBNET:     #Insert subnet mask for host here
+HOST_GATEWAY:    #Insert gateway for host here

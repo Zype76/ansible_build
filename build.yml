@@ -2,11 +2,6 @@
 - hosts: all
   remote_user: root
   gather_facts: no
-  vars:
-    SERVER_HOSTNAME: #Insert desired hostname for server
-    HOST_IP:         #Insert desired ip for host here
-    HOST_SUBNET:     #Insert subnet mask for host here
-    HOST_GATEWAY:    #Insert gateway for host here
   vars_files:
     - external_vars.yml
 
