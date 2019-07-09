@@ -1,1 +1,4 @@
+# ignore user generated variable file
 external_vars.yml
+# ignore hosts file
+hosts
