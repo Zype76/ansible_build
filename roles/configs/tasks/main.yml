@@ -20,7 +20,7 @@
   lineinfile:
     path: /etc/ssh/sshd_config
     regexp: "^Port 22"
-    line: "Port {{ sshdport }}"
+    line: "Port {{ SSHDPORT }}"
     insertafter: "^# What "
     state: present
   notify:
@@ -37,14 +37,14 @@
 
 - name: Add a maintenace account with full sudo 
   user:
-    name: "{{ service_account }}"
+    name: "{{ SERVICE_ACCOUNT }}"
     shell: /bin/bash
     groups: wheel
     append: yes
 
 - name: Set authorized key for service account by copying it from current user
   authorized_key:
-    user: "{{ service_account }}"
+    user: "{{ SERVICE_ACCOUNT }}"
     state: present
     key: "{{ lookup('file', lookup('env','HOME') + '/.ssh/id_rsa.pub') }}"
 
