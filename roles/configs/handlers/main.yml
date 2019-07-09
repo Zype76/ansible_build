@@ -1,2 +1,8 @@
 ---
 # handlers file for configs
+- name: restart sshd
+  service:
+    name: sshd
+    state: restarted
+- name: recreate grub
+  shell: grub2-mkconfig -o /boot/grub2/grub.cfg

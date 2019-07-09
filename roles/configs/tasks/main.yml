@@ -62,6 +62,12 @@
     line: '%wheel ALL=(ALL) NOPASSWD: ALL' 
     validate: /usr/sbin/visudo -cf %s 
 
+- name: Stop and disable NetworkManager
+  service:
+  name: NetworkManager
+    enabled: no
+    state:   stopped
+
 - name: Disable ipv6 on the host
   lineinfile:
     path: /etc/sysctl.conf
@@ -83,3 +89,12 @@
 
 - name: Remove eno interface files
   shell: /bin/rm -rf /etc/sysconfig/network-scripts/ifcfg-eno*
+
+- name: Add grub entry for eth0
+  lineinfile:
+    path: /etc/default/grub
+    regexp: "^GRUB_CMDLINE_LINUX"
+    line: 'GRUB_CMDLINE_LINUX="crashkernel=auto rd.lvm.lv=centos/root rd.lvm.lv=centos/swap net.ifnames=0 biosdevname=0 rhgb quiet"'
+    state: present
+  notify:
+    - recreate grub
