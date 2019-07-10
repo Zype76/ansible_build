@@ -54,6 +54,13 @@
     dest: /etc/udev/rules.d/80-net-name-slot.rules
     state: link
 
+- name: Create a second symbolic link to remove consistent network device naming
+  file:
+    src: /dev/null
+    dest: /etc/udev/rules.d/90-eno-fix.rules 
+    state: link
+    force: yes
+
 - name: Validate the sudoers file before saving
   lineinfile:
     path: /etc/sudoers
@@ -81,6 +88,10 @@
 - name: Genereate UUID for eth0
   shell: /usr/bin/uuidgen
   register: UUID_PRIMARY_INTERFACE
+
+- name: Capture MAC for primary nic
+  shell: cat /sys/class/net/en*/address
+  register: mac_result
 
 - name: Genereate template for primary nic
   template:
