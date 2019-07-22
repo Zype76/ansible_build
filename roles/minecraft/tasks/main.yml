@@ -24,10 +24,17 @@
     shell: /bin/bash
     home: /opt/minecraft/
 
+- name: Change permisisons on app directory
+  file:
+    path: /opt/minecraft/
+    state: directory
+    owner: {{ MINECRAFT_USER }}
+    mode: '0755'
+
 - name: Download server jar with md5 check
   get_url:
     url: https://launcher.mojang.com/v1/objects/d0d0fe2b1dc6ab4c65554cb734270872b72dadd6/server.jar
-    dest: /home/{{ MINECRAFT_USER }}/minecraft/server.jar
+    dest: /opt/minecraft/server.jar
     checksum: md5:80424cd6fd6161d5509815bbe65cf9a3
 
 - name: Accept the eula 
@@ -40,3 +47,9 @@
   template:
     src: service.j2
     dest: /etc/systemd/system/minecraft.service
+
+- name: Start and enable minecraft server service 
+  service:
+    name: minecraft
+    state: started
+    enabled: yes

@@ -10,6 +10,10 @@
     - configs
 
   tasks:
+  - include_role:
+      name: minecraft
+    when: "'minecraft' in group_names"
+
   - name: Restart server
     command: /sbin/shutdown -r +1
     async: 0
