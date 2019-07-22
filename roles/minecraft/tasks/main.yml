@@ -1,0 +1,42 @@
+---
+# tasks file for minecraft
+- name: add required port for server
+  firewalld:
+    port: 25565/tcp
+    permanent: yes
+    state: enabled
+
+- name: Install openjdk 
+  yum:
+    name: 
+      - java-1.8.0-openjdk
+    state: latest
+
+- name: Create a directory for the minecraft files under opt
+  file:
+    path: /opt/minecraft/
+    state: directory
+
+#Add the following variable to your encrypted vault file!!
+- name: Add an account to run the server as
+  user:
+    name: "{{ MINECRAFT_USER }}"
+    shell: /bin/bash
+    home: /opt/minecraft/
+
+- name: Download server jar with md5 check
+  get_url:
+    url: https://launcher.mojang.com/v1/objects/d0d0fe2b1dc6ab4c65554cb734270872b72dadd6/server.jar
+    dest: /home/{{ MINECRAFT_USER }}/minecraft/server.jar
+    checksum: md5:80424cd6fd6161d5509815bbe65cf9a3
+
+- name: Accept the eula 
+  copy:
+    content: 'eula=true'
+    dest: /opt/minecraft/eula.txt 
+
+#Note: Add a SERVER_RAM for the service template 
+- name: Genereate template for systemd service
+  template:
+    src: service.j2
+    dest: /etc/systemd/system/minecraft.service
