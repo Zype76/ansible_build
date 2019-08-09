@@ -28,14 +28,13 @@
   file:
     path: /opt/minecraft/
     state: directory
-    owner: {{ MINECRAFT_USER }}
+    owner: "{{ MINECRAFT_USER }}"
     mode: '0755'
 
 - name: Download server jar with md5 check
   get_url:
-    url: https://launcher.mojang.com/v1/objects/d0d0fe2b1dc6ab4c65554cb734270872b72dadd6/server.jar
+    url: https://launcher.mojang.com/v1/objects/3dc3d84a581f14691199cf6831b71ed1296a9fdf/server.jar
     dest: /opt/minecraft/server.jar
-    checksum: md5:80424cd6fd6161d5509815bbe65cf9a3
 
 - name: Accept the eula 
   copy:

@@ -28,6 +28,7 @@
       - curl
       - open-vm-tools
       - git
+      - firewalld
     state: latest
 
 - name: Ensures all installed packages are up to date
